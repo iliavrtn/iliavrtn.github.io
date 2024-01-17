@@ -1,63 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MTW App Template</title>
-    <!--
-        The tailwind CDN is designed for development purposes only, and is not the best choice for production.
-        Read more here: https://tailwindcss.com/docs/installation 
-    -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- example for dark theme styling when using tailwind cdn -->
     <style>
-        /*examples for dark/light themes*/
-        .dark .dark\:text-white {
-            color: #fff;
-        }
-        .dark .dark\:bg-gray-800 {
-            background-color: #1f2937;
-        }
-        .light .light\:text-black {
-            color: #000;
-        }
+      /*add your custom css rules here*/
+      #calculator {
+        margin: 0 auto;
+        width: 350px;
+        height: auto;
+        background-color: lightgoldenrodyellow;
+        border-radius: 5px;
+        padding: 10px;
+        text-align: center;
+      }
 
-        /*add your custom css rules here*/
+      #screen {
+        padding: 10px 0px 10px 0px;
+      }
+
+      #result {
+        padding: 10px;
+        width: 90%;
+        border-color: dimgray;
+        border-radius: 3px;
+        text-align: right;
+        font-size: 50px;
+        letter-spacing: 7px;
+      }
+
+      button {
+        width: 70px;
+        height: 50px;
+        margin: 4px;
+        border-radius: 2px;
+        border-color: dimgray;
+        background-color: whitesmoke;
+      }
     </style>
-</head>
+  </head>
 
-<body class="dark:text-white light:text-black">
-
+  <body>
     <!-- your app code goes here -->
+    <div id="calculator">
+      <div id="screen">
+        <input type="text" id="result" readonly="readonly" />
+      </div>
+      <div style="display: flex;justify-content: end; margin: 4px;">
+        <button>Clear</button>
+      </div>
+      <div>
+        <table style="width: 350px;">
+            <td><button>7</button></td>
+            <td><button>8</button></td>
+            <td><button>9</button></td>
+            <td><button>+</button></td>
+          </tr>
+          <tr>
+            <td><button>4</button></td>
+            <td><button>5</button></td>
+            <td><button>6</button></td>
+            <td><button>-</button></td>
+          </tr>
+          <tr>
+            <td><button>1</button></td>
+            <td><button>2</button></td>
+            <td><button>3</button></td>
+            <td><button>/</button></td>
+          </tr>
+          <tr>
+            <td><button>0</button></td>
+            <td><button>.</button></td>
+            <td><button>=</button></td>
+            <td><button>*</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
     <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
     <script>
-        // custom config for the MTW app 
-        const mtwAppConfig = {
-            border: true // app border in the MTW page                    
+      // Function that display value
+      var buttons = {},
+        result = {};
+
+      function calculate() {
+        var currentValue = this.innerHTML;
+
+        if (currentValue == "=") {
+          try {
+            result.value = eval(result.value);
+          } catch (e) {
+            result.value = null;
+          }
+          return;
+        } else if (currentValue == "Clear") {
+          result.value = null;
+          return;
         }
 
-        ///////////////////////////////////////////////////////
-        // implement this functions in order to use private API        
-        const sendPrivateApiRequest = async () => {
-            // your code here:
-            // sendRequestToParent({ cat: 'getAssets' })
-        }        
+        result.value += currentValue;
+      }
 
-        const acceptPrivateApiResponse = async (data) => {
-            // process received data here:
-            // console.log(data)
+      function initElement() {
+        buttons = document.querySelectorAll("button");
+        result = document.querySelector("#result");
+      }
+
+      function initEvent() {
+        for (var index = 0, length = buttons.length; index < length; index++) {
+          buttons[index].addEventListener("click", calculate);
         }
+      }
 
-        // use this in order to send on document load
-        document.addEventListener('DOMContentLoaded', () => {
-            // your code here:
-            //sendRequestToParent({ method: 'getAssets' })
-        })
+      function init() {
+        initElement();
+        initEvent();
+      }
 
+      window.addEventListener("DOMContentLoaded", init);
     </script>
     <script src="https://morethanwallet.com/appstore/index.js"></script>
-</body>
-
+  </body>
 </html>
