@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MTW App Template</title>
+    <style>
+      /*add your custom css rules here*/
+      #calculator {
+        margin: 0 auto;
+        width: 500px;
+        height: auto;
+        background-color: cadetblue;
+        border-radius: 7px;
+        border-color: black;
+        border-width: 2px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      #screen {
+        padding: 10px 0px 10px 0px;
+      }
+
+      #result {
+        height: 50px;
+        padding: 10px;
+        width: 90%;
+        border-color: dimgray;
+        border-radius: 3px;
+        text-align: right;
+        font-size: 15px;
+      }
+
+      #table {
+        padding: 10px;
+      }
+
+      button {
+        width: 85px;
+        height: 50px;
+        margin: 4px;
+        border-radius: 2px;
+        border-color: dimgray;
+        background-color: whitesmoke;
+      }
+
+      button:hover {
+        background-color: darkgray;
+      }
+
+      button:active {
+        background-color: aliceblue;
+      }
+
+      .table > div {
+        display: flex;
+        justify-content: center;
+      }
+
+      button:disabled {
+        width: 72px;
+        color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- your app code goes here -->
+    <div id="calculator">
+      <div id="screen">
+        <input type="text" id="result" readonly="readonly" />
+      </div>
+      <div class="table">
+        <div
+          style="
+            padding: 5px 0px 5px 0px;
+            margin-bottom: 5px;
+            background-color: darkcyan;
+            border-radius: 5px;
+          "
+        >
+          <button disabled class="div-button">MC</button>
+          <button disabled class="div-button">MR</button>
+          <button disabled class="div-button">M+</button>
+          <button disabled class="div-button">M-</button>
+          <button disabled class="div-button">MS</button>
+          <button disabled class="div-button">M^</button>
+        </div>
+        <div>
+          <table>
+            <tr>
+              <td><button>2^nd</button></td>
+              <td><button>π</button></td>
+              <td><button>e</button></td>
+              <td><button>C</button></td>
+              <td><button>⌫</button></td>
+            </tr>
+            <tr>
+              <td><button>x^2</button></td>
+              <td><button>1/x</button></td>
+              <td><button>|x|</button></td>
+              <td><button>exp</button></td>
+              <td><button>mod</button></td>
+            </tr>
+            <tr>
+              <td><button>√x</button></td>
+              <td><button>(</button></td>
+              <td><button>)</button></td>
+              <td><button>n!</button></td>
+              <td><button>÷</button></td>
+            </tr>
+            <tr>
+              <td><button>x^y</button></td>
+              <td><button>7</button></td>
+              <td><button>8</button></td>
+              <td><button>9</button></td>
+              <td><button>X</button></td>
+            </tr>
+            <tr>
+              <td><button>10^x</button></td>
+              <td><button>4</button></td>
+              <td><button>5</button></td>
+              <td><button>6</button></td>
+              <td><button>-</button></td>
+            </tr>
+            <tr>
+              <td><button>log</button></td>
+              <td><button>1</button></td>
+              <td><button>2</button></td>
+              <td><button>3</button></td>
+              <td><button>+</button></td>
+            </tr>
+            <tr>
+              <td><button>ln</button></td>
+              <td><button>+/-</button></td>
+              <td><button>0</button></td>
+              <td><button>.</button></td>
+              <td><button>=</button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
+    <script>
+      var buttons = {};
+      var result = {};
+
+      var currentExpression = "";
+
+      function calculate() {
+        var currentValue = this.innerHTML;
+
+        switch (currentValue) {
+          case "C":
+            currentExpression = "";
+            break;
+          case "⌫":
+            currentExpression = currentExpression.slice(0, -1);
+            break;
+          case "=":
+            try {
+              result.value = evaluateExpression(currentExpression);
+              currentExpression = result.value;
+            } catch (error) {
+              result.value = "Error";
+              return;
+            }
+            break;
+          case "X":
+            currentExpression += "X";
+            break;
+          case "x^2":
+            currentExpression += "^2";
+            break;
+          case "1/x":
+            currentExpression += "1/";
+            break;
+          case "|x|":
+            currentExpression += "Math.abs(";
+            break;
+          case "exp":
+            currentExpression += "Math.exp(";
+            break;
+          case "mod":
+            currentExpression += "%";
+            break;
+          case "n!":
+            currentExpression += "!";
+            break;
+          case "√x":
+            currentExpression += "Math.sqrt(";
+            break;
+          case "x^y":
+            currentExpression += "^";
+            break;
+          case "10^x":
+            currentExpression += "10^";
+            break;
+          case "log":
+            currentExpression += "Math.log10(";
+            break;
+          case "ln":
+            currentExpression += "Math.log(";
+            break;
+          case "+/-":
+            currentExpression = "-" + currentExpression;
+            break;
+          default:
+            currentExpression += currentValue;
+        }
+
+        result.value = currentExpression;
+      }
+
+      function evaluateExpression(expression) {
+        expression = expression.replace(/X/g, "*").replace(/\^/g, "**");
+        expression = expression.replace(/π/g, Math.PI);
+        expression = expression.replace(
+          /\|.*\|/,
+          (match) => `Math.abs(${match.slice(1, -1)})`
+        );
+        expression = expression.replace(/(\d+)!/g, (match, num) =>
+          factorial(parseInt(num))
+        );
+        return eval(expression);
+      }
+
+      function factorial(n) {
+        if (n === 0 || n === 1) {
+          return 1;
+        } else {
+          return n * factorial(n - 1);
+        }
+      }
+
+      function initElement() {
+        buttons = document.querySelectorAll("button");
+        result = document.querySelector("#result");
+      }
+
+      function initEvent() {
+        for (var index = 0, length = buttons.length; index < length; index++) {
+          buttons[index].addEventListener("click", calculate);
+        }
+      }
+
+      function init() {
+        initElement();
+        initEvent();
+      }
+
+      window.addEventListener("DOMContentLoaded", init);
+    </script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+  </body>
+</html>
