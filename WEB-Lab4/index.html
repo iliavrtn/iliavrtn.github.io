@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC/USD Prices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="app" class="max-w-[1000px] mx-auto">
+      <h1 class="font-bold text-3xl text-center text-blue-600 my-4">
+        Cryptocurrency Data
+      </h1>
+    </div>
+    <script>
+      const table = (content) => `<table class="table-auto w-full mt-20">${content}</table>`;
+      const row = (k, v, i) => {
+        return `<tr>
+            <td class="w-16 p-2 align-top border-b border-r ${i === 0 && ' border-t'} border-gray-200"><img class="h-full w-auto" src="${v['image']}" /></td>
+            <td class="p-2 align-top border-b border-r ${i === 0 && ' border-t'} border-gray-200">${k}</td>
+            <td class="p-2 align-top border-b border-r ${i === 0 && ' border-t'} border-gray-200 text-blue-600 font-bold"><a href="${v['website']}">${v['name']}</a></td>
+            <td class="p-2 align-top border-b ${i === 0 && ' border-t'} border-gray-200">${v['summary']}</td>
+            </tr>`;
+      };
+          
+      const createTable = (data) => {
+        let rows = Object.entries(data).map(([key, value], index) => row(key, value, index)).join("");
+        document.getElementById("app").insertAdjacentHTML("beforeend", table(rows));
+        thead = `<thead>
+          <tr class="bg-blue-50">
+            <th class="p-2 align-top border-r border-gray-200" scope="col"></th>
+            <th class="p-2 border-r border-gray-200" scope="col">ID</th>
+            <th class="p-2 border-r border-gray-200" scope="col">Link</th>
+            <th class="p-2 border-gray-200" scope="col">Summary</th>
+          </tr>
+        </thead>`;
+        document.getElementsByClassName("table-auto")[0].insertAdjacentHTML("afterbegin",thead);
+      };
+  
+      const url = "https://api.mtw-testnet.com/assets/all";
+      fetch(url)
+        .then((response) => response.json())
+        .then((v) => createTable(v))
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+  </html>
+</html>
