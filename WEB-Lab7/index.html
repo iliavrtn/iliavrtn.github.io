@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html ng-app="imageApp">
+  <head>
+    <title>Image Scroller</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .thumbnails-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .thumbnail {
+        width: 150px;
+        height: 100px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+      }
+
+      .thumbnail:hover {
+        transform: scale(1.1);
+      }
+
+      .fullsize {
+        display: none;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+
+      .fullsize.active {
+        display: block;
+      }
+
+      .separator {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-top: 2px solid #ddd;
+      }
+
+      .arrow {
+        cursor: pointer;
+        margin: 0 10px;
+        font-size: 24px;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #333;
+        border-radius: 10%;
+        padding: 10px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .arrow:hover {
+        color: #fff;
+        background-color: #333;
+      }
+
+      .centered-arrows {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-controller="ImageController">
+      <div class="thumbnails-container">
+        <img
+          ng-repeat="image in images"
+          ng-src="{{image.thumbnail}}"
+          ng-click="showFullSize($index)"
+          class="thumbnail"
+        />
+      </div>
+      <div class="separator"></div>
+      <div>
+        <img
+          ng-repeat="image in images"
+          ng-src="{{image.fullsize}}"
+          class="fullsize"
+          ng-class="{active: $index === currentIndex}"
+        />
+      </div>
+      <div class="centered-arrows">
+        <span class="arrow" ng-click="prevImage()">&#10094;</span>
+        <span class="arrow" ng-click="nextImage()">&#10095;</span>
+      </div>
+    </div>
+
+    <script>
+      var app = angular.module("imageApp", []);
+
+      app.controller("ImageController", function ($scope, $interval) {
+        $scope.images = [
+          {
+            thumbnail:
+              "https://news.mit.edu/sites/default/files/styles/news_article__image_gallery/public/images/202311/StableRep2-transformed.png?itok=FkiVGv50",
+            fullsize:
+              "https://news.mit.edu/sites/default/files/styles/news_article__image_gallery/public/images/202311/StableRep2-transformed.png?itok=FkiVGv50",
+          },
+          {
+            thumbnail:
+              "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/26a0fcee-15a9-4c35-90ec-c7cc0875e0b4/dfpco6t-300337bb-a04a-433e-aeba-1a3f7a6acd51.png/v1/fill/w_900,h_600,q_80,strp/midjourney_1178_by_javier_lluesma_dfpco6t-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMjZhMGZjZWUtMTVhOS00YzM1LTkwZWMtYzdjYzA4NzVlMGI0XC9kZnBjbzZ0LTMwMDMzN2JiLWEwNGEtNDMzZS1hZWJhLTFhM2Y3YTZhY2Q1MS5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.UVBtgUHY48XQyLC2yvWz0t15m36kWOPQurJVVvRZrAs",
+            fullsize:
+              "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/26a0fcee-15a9-4c35-90ec-c7cc0875e0b4/dfpco6t-300337bb-a04a-433e-aeba-1a3f7a6acd51.png/v1/fill/w_900,h_600,q_80,strp/midjourney_1178_by_javier_lluesma_dfpco6t-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMjZhMGZjZWUtMTVhOS00YzM1LTkwZWMtYzdjYzA4NzVlMGI0XC9kZnBjbzZ0LTMwMDMzN2JiLWEwNGEtNDMzZS1hZWJhLTFhM2Y3YTZhY2Q1MS5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.UVBtgUHY48XQyLC2yvWz0t15m36kWOPQurJVVvRZrAs",
+          },
+          {
+            thumbnail:
+              "https://image-cdn.learnin.tw/bnextmedia/image/album/2022-12/img-1670923097-73793.png?w=900&output=webp",
+            fullsize:
+              "https://image-cdn.learnin.tw/bnextmedia/image/album/2022-12/img-1670923097-73793.png?w=900&output=webp",
+          },
+          {
+            thumbnail:
+              "https://www.moms-blog.de/wp-content/uploads/2023/01/midjourney_bild.jpg",
+            fullsize:
+              "https://www.moms-blog.de/wp-content/uploads/2023/01/midjourney_bild.jpg",
+          },
+          {
+            thumbnail:
+              "https://millikancorydon.com/wp-content/uploads/2022/12/Julissa-Flores.-Ai-art-1-1-900x600.jpg",
+            fullsize:
+              "https://millikancorydon.com/wp-content/uploads/2022/12/Julissa-Flores.-Ai-art-1-1-900x600.jpg",
+          },
+          {
+            thumbnail:
+              "https://miro.medium.com/v2/resize:fit:900/1*Ydft4I297OCtjxSCXeeBQg.png",
+            fullsize:
+              "https://miro.medium.com/v2/resize:fit:900/1*Ydft4I297OCtjxSCXeeBQg.png",
+          },
+        ];
+
+        $scope.currentIndex = 0;
+
+        $scope.showFullSize = function (index) {
+          $scope.currentIndex = index;
+        };
+
+        $scope.prevImage = function () {
+          $scope.currentIndex =
+            ($scope.currentIndex - 1 + $scope.images.length) %
+            $scope.images.length;
+        };
+
+        $scope.nextImage = function () {
+          $scope.currentIndex =
+            ($scope.currentIndex + 1) % $scope.images.length;
+        };
+      });
+    </script>
+  </body>
+</html>
