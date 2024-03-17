@@ -1,0 +1,63 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Change font */
+  background-color: #292929; /* Dark background */
+  color: #fff; /* White text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+  background-color: #1f1f1f; /* Darker background */
+  border-radius: 10px; /* More rounded corners */
+  overflow: hidden; /* No overflow */
+  width: 500px; /* Set width */
+  height: 350px; /* Set height */
+}
+
+.thumbnails {
+  display: flex;
+  justify-content: center;
+  padding: 10px; /* Reduced padding */
+  background-color: #292929; /* Dark background */
+  width: 100%;
+  overflow-x: auto;
+  gap: 10px; /* Space between thumbnails */
+}
+
+.thumbnail {
+  cursor: pointer;
+  border: 2px solid #777; /* Gray border */
+  transition: transform 0.3s, border-color 0.3s; /* Added transition */
+}
+
+.thumbnail:hover,
+.thumbnail:focus {
+  transform: scale(1.05); /* Slightly larger scale */
+  border-color: #fff; /* White border on hover */
+}
+
+.main-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; /* Reduced height */
+  width: 100%;
+  position: relative;
+  overflow: hidden; /* No overflow */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.main-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Cover the container */
+}
